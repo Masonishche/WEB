@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор теплоти згоряння</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label, input { display: block; margin: 5px 0; }
+        button { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Калькулятор теплоти згоряння палива</h2>
+    <form id="fuelForm">
+        <label>H<sub>P</sub> (%): <input type="number" id="H" step="0.01"></label>
+        <label>C<sub>P</sub> (%): <input type="number" id="C" step="0.01"></label>
+        <label>S<sub>P</sub> (%): <input type="number" id="S" step="0.01"></label>
+        <label>N<sub>P</sub> (%): <input type="number" id="N" step="0.01"></label>
+        <label>O<sub>P</sub> (%): <input type="number" id="O" step="0.01"></label>
+        <label>W<sub>P</sub> (%): <input type="number" id="W" step="0.01"></label>
+        <label>A<sub>P</sub> (%): <input type="number" id="A" step="0.01"></label>
+        <button type="button" onclick="calculate()">Розрахувати</button>
+    </form>
+    <h3>Результати:</h3>
+    <div id="results"></div>
+    
+    <script>
+        function calculate() {
+            let H = parseFloat(document.getElementById('H').value) || 0;
+            let C = parseFloat(document.getElementById('C').value) || 0;
+            let S = parseFloat(document.getElementById('S').value) || 0;
+            let N = parseFloat(document.getElementById('N').value) || 0;
+            let O = parseFloat(document.getElementById('O').value) || 0;
+            let W = parseFloat(document.getElementById('W').value) || 0;
+            let A = parseFloat(document.getElementById('A').value) || 0;
+            
+            let K_RS = 100 / (100 - W);
+            let K_RG = 100 / (100 - W - A);
+            
+            let H_S = H * K_RS;
+            let C_S = C * K_RS;
+            let S_S = S * K_RS;
+            let N_S = N * K_RS;
+            let O_S = O * K_RS;
+            let A_S = A * K_RS;
+            
+            let H_G = H * K_RG;
+            let C_G = C * K_RG;
+            let S_G = S * K_RG;
+            let N_G = N * K_RG;
+            let O_G = O * K_RG;
+            
+            let Q_R = (339 * C + 1030 * H - 108.8 * (O - S) - 25 * W)/1000;
+            let Q_S = (Q_R + 0.025 * W) * K_RS;
+            let Q_G = (Q_R + 0.025 * W) * K_RG;
+            
+            document.getElementById('results').innerHTML = `
+                <p>Коефіцієнт переходу від робочої до сухої маси: ${K_RS.toFixed(2)}</p>
+                <p>Коефіцієнт переходу від робочої до горючої маси: ${K_RG.toFixed(2)}</p>
+                <p>Склад сухої маси: H<sub>S</sub> = ${H_S.toFixed(2)}%, C<sub>S</sub> = ${C_S.toFixed(2)}%, S<sub>S</sub> = ${S_S.toFixed(2)}%, N<sub>S</sub> = ${N_S.toFixed(2)}%, O<sub>S</sub> = ${O_S.toFixed(2)}%, A<sub>S</sub> = ${A_S.toFixed(2)}%</p>
+                <p>Склад горючої маси: H<sub>G</sub> = ${H_G.toFixed(2)}%, C<sub>G</sub> = ${C_G.toFixed(2)}%, S<sub>G</sub> = ${S_G.toFixed(2)}%, N<sub>G</sub> = ${N_G.toFixed(2)}%, O<sub>G</sub> = ${O_G.toFixed(2)}%</p>
+                <p>Нижча теплота згоряння для робочої маси: ${Q_R.toFixed(4)} МДж/кг</p>
+                <p>Нижча теплота згоряння для сухої маси: ${Q_S.toFixed(2)} МДж/кг</p>
+                <p>Нижча теплота згоряння для горючої маси: ${Q_G.toFixed(2)} МДж/кг</p>
+            `;
+        }
+    </script>
+</body>
+</html>
