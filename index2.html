@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор теплоти згоряння мазуту</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label, input { display: block; margin: 5px 0; }
+        button { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Калькулятор теплоти згоряння мазуту</h2>
+    <form id="fuelForm">
+        <label>C<sub>Г</sub> (%): <input type="number" id="C_G" step="0.01"></label>
+        <label>H<sub>Г</sub> (%): <input type="number" id="H_G" step="0.01"></label>
+        <label>O<sub>Г</sub> (%): <input type="number" id="O_G" step="0.01"></label>
+        <label>S<sub>Г</sub> (%): <input type="number" id="S_G" step="0.01"></label>
+        <label>Q<sub>i daf</sub> (МДж/кг): <input type="number" id="Q_i_daf" step="0.01"></label>
+        <label>W<sub>Р</sub> (%): <input type="number" id="W_R" step="0.01"></label>
+        <label>A<sub>d</sub> (%): <input type="number" id="A_d" step="0.01"></label>
+        <label>V<sub>Г</sub> (мг/кг): <input type="number" id="V_G" step="0.01"></label>
+        <button type="button" onclick="calculate()">Розрахувати</button>
+    </form>
+    <h3>Результати:</h3>
+    <div id="results"></div>
+    
+    <script>
+        function calculate() {
+            let C_G = parseFloat(document.getElementById('C_G').value) || 0;
+            let H_G = parseFloat(document.getElementById('H_G').value) || 0;
+            let O_G = parseFloat(document.getElementById('O_G').value) || 0;
+            let S_G = parseFloat(document.getElementById('S_G').value) || 0;
+            let Q_i_daf = parseFloat(document.getElementById('Q_i_daf').value) || 0;
+            let W_R = parseFloat(document.getElementById('W_R').value) || 0;
+            let A_d = parseFloat(document.getElementById('A_d').value) || 0;
+            let V_G = parseFloat(document.getElementById('V_G').value) || 0;
+            
+            let C_R = C_G * (100 - W_R - A_d) / 100;
+            let H_R = H_G * (100 - W_R - A_d) / 100;
+            let O_R = O_G * (100 - W_R - A_d) / 100;
+            let S_R = S_G * (100 - W_R - A_d) / 100;
+            let A_R = A_d * (100 - W_R) / 100;
+            let V_R = V_G * (100 - W_R) / 100;
+            
+            let Q_i_r = Q_i_daf * (100 - W_R - A_d) / 100;
+            
+            document.getElementById('results').innerHTML = `
+                <p>Склад робочої маси мазуту:</p>
+                <p>Вуглець (C<sub>Р</sub>): ${C_R.toFixed(2)}%</p>
+                <p>Водень (H<sub>Р</sub>): ${H_R.toFixed(2)}%</p>
+                <p>Кисень (O<sub>Р</sub>): ${O_R.toFixed(2)}%</p>
+                <p>Сірка (S<sub>Р</sub>): ${S_R.toFixed(2)}%</p>
+                <p>Зола (A<sub>Р</sub>): ${A_R.toFixed(2)}%</p>
+                <p>Ванадій (V<sub>Р</sub>): ${V_R.toFixed(2)} мг/кг</p>
+                <p>Нижча теплота згоряння мазуту на робочу масу: ${Q_i_r.toFixed(2)} МДж/кг</p>
+            `;
+        }
+    </script>
+</body>
+</html>
